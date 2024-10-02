@@ -36,7 +36,7 @@ Flutter super model builder is an easy tool for creating flutter models with all
 * Equality
 
 
-<<<<<<< HEAD
+# Download:
 =======
 ##### Web version: :hotel:
 
