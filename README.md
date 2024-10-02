@@ -1,7 +1,52 @@
-# Flutter_Super_Model_Builder
+# Flutter_Super_Model_Builder :100: :100:
 
-Flutter super model builder is an easy tool for creating flutter models with all necessary
-functions and utilities to make development process easier and maintainable.
+Flutter super model builder is an easy tool for creating flutter models with all necessary functions and utilities to make development process easier and maintainable.
+
+# New Changes:
+* Json model generators
+
+
+##### Web version: :hotel:
+
+> <a href="https://a7mdragab1.github.io/FlutterSuperModelBuilder" target="_blank">Flutter Super Model Builder Web version</a>
+
+
+##### Windows version: :desktop_computer:
+
+> <a href="https://github.com/a7mdragab1/FlutterSuperModelBuilder/releases/download/v1.1.7.0/super_model_builder_1.1.7.0.msix" target="_blank">Flutter_super_model_builder_v1.1.7.0.msix</a>
+
+
+# Features:
+* Class Fields
+* Fields Declaration
+* Model Fields
+* NewInstance
+* DefaultConstructor
+* NamedConstructor
+* FromMap
+* FromMapList
+* FromJson
+* ToMap
+* ToJson
+* ToString
+* CopyWith
+* UpdateWith
+* UpdateFrom
+* UpdateFromMap
+* Equality
+
+
+<<<<<<< HEAD
+=======
+##### Web version: :hotel:
+
+> <a href="https://a7mdragab.github.io/flutter_super_model_builder" target="_blank">Flutter Super Model Builder Web version</a>
+
+
+##### Windows version: :desktop_computer:
+
+> <a href="https://github.com/a7mdragab1/FlutterSuperModelBuilder/releases/download/v1.1.7.0/super_model_builder_1.1.7.0.msix" target="_blank">Flutter_super_model_builder_v1.1.7.0.msix</a>
+
 
 ## Getting started
 
@@ -9,175 +54,23 @@ functions and utilities to make development process easier and maintainable.
 Add to your project yaml dependencies:
 ```dart
 dependencies:
-intl: ^0.19.0
+  intl: ^0.19.0
 ```
 Add to your project yaml dependencies if you need date only fields:
 
 https://pub.dev/packages/date_only_field
 ```dart
 dependencies:
-date_only_field: ^0.0.14
+  date_only_field: ^0.0.14
 ```
-
-if your models have DateTime or TimeOfDay or Date fields, add this dart file ``super_date_converters.dart`` to your model directory.
-
-```dart
-import 'package:date_only_field/date_only_field.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
-class SuperDateConverters {
-  /// Specify a defaultDateTimeToMapFormat (formattedString or timestamp) default (formattedString)
-  static const DateTimeToMapFormats defaultDateTimeToMapFormat = DateTimeToMapFormats.timestamp;
-  static get isStr => defaultDateTimeToMapFormat == DateTimeToMapFormats.formattedString;
-
-  /// Specify a defaultDateFormat (Optional) default (dd-MMMM-yyyy)
-  static const String defaultDateFormatStr = ('dd-MMMM-yyyy');
-  static DateFormat defaultDateFormat = DateFormat(defaultDateFormatStr);
-
-  /// Specify a defaultTimeFormat (Optional) default (hh:mm a)
-  static const String defaultTimeFormatStr = ('hh:mm a');
-  static DateFormat defaultTimeFormat = DateFormat(defaultTimeFormatStr);
-
-  /// Specify a defaultDateTimeFormat (Optional) default (dd-MMMM-yyyy - hh:mm a)
-  static const String defaultDateTimeFormatStr = ('$defaultDateFormatStr - $defaultTimeFormatStr');
-  static DateFormat defaultDateTimeFormat = DateFormat('$defaultDateFormat - $defaultTimeFormat');
-
-  static DateTime toDateTime(TimeOfDay x) {
-    return DateTime(2020, 1, 1, x.hour, x.minute);
-  }
-
-  static TimeOfDay toTimeOfDay(DateTime x) {
-    return TimeOfDay.fromDateTime(x);
-  }
-
-  static dynamic toMapConversion(obj, {bool isTimeStamp = false, DateFormat? specialFormat}) {
-    if (isTimeStamp) {
-      if (obj is Date || obj is DateTime) {
-        return obj.millisecondsSinceEpoch;
-      } else {
-        return toDateTime(obj).millisecondsSinceEpoch;
-      }
-    } else if (specialFormat != null) {
-      return formatObj(obj);
-    } else {
-      return _toMapConversion(obj);
-    }
-  }
-
-  static dynamic _toMapConversion(obj) {
-    if (isStr) return formatObj(obj);
-    if (obj is Date || obj is DateTime) {
-      return obj.millisecondsSinceEpoch;
-    } else if (obj is TimeOfDay) {
-      return defaultTimeFormat.format(toDateTime(obj));
-    }
-  }
-
-  static String formatObj(obj, {DateFormat? specialFormat}) {
-    if (obj is Date) {
-      return obj.format(specialFormat?.pattern ?? defaultDateFormatStr);
-    } else if (obj is DateTime) {
-      return (specialFormat ?? defaultDateTimeFormat).format(obj);
-    } else if (obj is TimeOfDay) {
-      return (specialFormat ?? defaultTimeFormat).format(toDateTime(obj));
-    }
-    return obj.toString();
-  }
-
-  static DateTime? tryParseDateTime(String x) {
-    try {
-      if (int.tryParse(x) != null) {
-        return DateTime.fromMillisecondsSinceEpoch(int.parse(x));
-      } else if (DateTime.tryParse(x) != null) {
-        return DateTime.parse(x);
-      } else {
-        return defaultDateTimeFormat.parse(x);
-      }
-    } catch (e) {
-      return null;
-    }
-  }
-
-  static Date? tryParseDate(String x) {
-    try {
-      var r = tryParseDateTime(x);
-      if (r != null) {
-        return Date.fromDateTime(r);
-      } else {
-        return Date.parse(x, dateFormat: defaultDateFormatStr);
-      }
-    } catch (e) {
-      return null;
-    }
-  }
-
-  static TimeOfDay? tryParseTime(String x) {
-    DateTime? d;
-    try {
-      d = defaultTimeFormat.parse(x);
-    } catch (e) {
-      d = tryParseDateTime(x);
-    }
-    return d == null ? null : TimeOfDay.fromDateTime(d);
-  }
-}
-
-enum DateTimeToMapFormats { formattedString, timestamp }
-
-extension TimeOfDayExtensions on TimeOfDay {
-  bool isSame(TimeOfDay other) {
-    return hour == other.hour && minute == other.minute;
-  }
-
-  bool isEqualOrBefore(TimeOfDay other) {
-    if (hour < other.hour) {
-      return true;
-    } else if (hour == other.hour) {
-      return (minute <= other.minute);
-    }
-    return false;
-  }
-
-  bool isBefore(TimeOfDay other) {
-    if (hour < other.hour) {
-      return true;
-    } else if (hour == other.hour) {
-      return (minute < other.minute);
-    }
-    return false;
-  }
-
-  bool isAfter(TimeOfDay other) {
-    if (hour > other.hour) {
-      return true;
-    } else if (hour == other.hour) {
-      return (minute > other.minute);
-    }
-    return false;
-  }
-
-  bool isEqualOrAfter(TimeOfDay other) {
-    if (hour > other.hour) {
-      return true;
-    } else if (hour == other.hour) {
-      return (minute >= other.minute);
-    }
-    return false;
-  }
-
-  bool operator <(TimeOfDay other) => isBefore(other);
-  bool operator <=(TimeOfDay other) => isEqualOrBefore(other);
-  bool operator >(TimeOfDay other) => isAfter(other);
-  bool operator >=(TimeOfDay other) => isEqualOrAfter(other);
-}
-
-```
-
 
 ## Usage
 
+## The Normal Fields MODEL Layout
 ![img.png](img.png)
+
+## The Json Fields MODEL Layout
+![img_3.png](img_3.png)
 
 ## The OUTPUT MODEL Layout
 ![img_1.png](img_1.png)
@@ -188,8 +81,13 @@ extension TimeOfDayExtensions on TimeOfDay {
 
 ## Download
 
-Web version:
+##### Web version: :hotel:
 
-<https://a7mdragab.github.io/flutter_super_model_builder>
+> <a href="https://a7mdragab1.github.io/FlutterSuperModelBuilder" target="_blank">Flutter Super Model Builder Web version</a>
 
-Any features needed will be added. Just tell me.
+
+##### Windows version: :desktop_computer:
+
+> <a href="https://github.com/a7mdragab1/FlutterSuperModelBuilder/releases/download/v1.1.7.0/super_model_builder_1.1.7.0.msix" target="_blank">Flutter_super_model_builder_v1.1.7.0.msix</a>
+
+`Any features needed will be added. Just tell me.`
